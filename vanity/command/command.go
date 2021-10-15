@@ -130,6 +130,10 @@ func Generate(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse {
 
 	g.GenerateAllFiles()
 
+	// Make sure we denote that optional is supported.
+	features := uint64(plugin.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
+	g.Response.SupportedFeatures = &features
+
 	if err := goformat(g.Response); err != nil {
 		g.Error(err)
 	}

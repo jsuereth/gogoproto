@@ -1797,10 +1797,13 @@ func needsStar(field *descriptor.FieldDescriptorProto, proto3 bool, allowOneOf b
 	}
 	if field.OneofIndex != nil && allowOneOf &&
 		(*field.Type != descriptor.FieldDescriptorProto_TYPE_MESSAGE) &&
-		(*field.Type != descriptor.FieldDescriptorProto_TYPE_GROUP) {
+		(*field.Type != descriptor.FieldDescriptorProto_TYPE_GROUP) &&
+		// Optional fields are encoded as oneofindex by default in protoc.
+		!field.IsOptional() {
 		return false
 	}
 	if proto3 &&
+		!field.IsOptional() &&
 		(*field.Type != descriptor.FieldDescriptorProto_TYPE_MESSAGE) &&
 		(*field.Type != descriptor.FieldDescriptorProto_TYPE_GROUP) &&
 		!gogoproto.IsCustomType(field) {
@@ -2195,7 +2198,7 @@ func (f *simpleField) decl(g *Generator, mc *msgCtx) {
 // getter prints the getter for the field.
 func (f *simpleField) getter(g *Generator, mc *msgCtx) {
 	oneof := false
-	if !oneof && !gogoproto.HasGoGetters(g.file.FileDescriptorProto, mc.message.DescriptorProto) {
+	if !f.protoField.IsOptional() && !oneof && !gogoproto.HasGoGetters(g.file.FileDescriptorProto, mc.message.DescriptorProto) {
 		return
 	}
 	if gogoproto.IsEmbed(f.protoField) || gogoproto.IsCustomType(f.protoField) {
@@ -2860,7 +2863,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			fieldName = ""
 		}
 
-		oneof := field.OneofIndex != nil && message.allowOneof()
+		oneof := field.OneofIndex != nil && message.allowOneof() && !field.IsOptional()
 		if oneof && oFields[*field.OneofIndex] == nil {
 			odp := message.OneofDecl[int(*field.OneofIndex)]
 			base := CamelCase(odp.GetName())

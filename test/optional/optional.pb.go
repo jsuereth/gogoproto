@@ -20,82 +20,57 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type Maybe struct {
-	// Types that are valid to be assigned to XValue:
-	//	*Maybe_Value
-	XValue               isMaybe_XValue `protobuf_oneof:"_value"`
-	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
-	XXX_unrecognized     []byte         `json:"-"`
-	XXX_sizecache        int32          `json:"-"`
+type OptMessage struct {
+	MyParam              *bool    `protobuf:"varint,1,opt,name=my_param,json=myParam,proto3,oneof" json:"my_param,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Maybe) Reset()         { *m = Maybe{} }
-func (m *Maybe) String() string { return proto.CompactTextString(m) }
-func (*Maybe) ProtoMessage()    {}
-func (*Maybe) Descriptor() ([]byte, []int) {
+func (m *OptMessage) Reset()         { *m = OptMessage{} }
+func (m *OptMessage) String() string { return proto.CompactTextString(m) }
+func (*OptMessage) ProtoMessage()    {}
+func (*OptMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_905cd112a63783c0, []int{0}
 }
-func (m *Maybe) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Maybe.Unmarshal(m, b)
+func (m *OptMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_OptMessage.Unmarshal(m, b)
 }
-func (m *Maybe) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Maybe.Marshal(b, m, deterministic)
+func (m *OptMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_OptMessage.Marshal(b, m, deterministic)
 }
-func (m *Maybe) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Maybe.Merge(m, src)
+func (m *OptMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OptMessage.Merge(m, src)
 }
-func (m *Maybe) XXX_Size() int {
-	return xxx_messageInfo_Maybe.Size(m)
+func (m *OptMessage) XXX_Size() int {
+	return xxx_messageInfo_OptMessage.Size(m)
 }
-func (m *Maybe) XXX_DiscardUnknown() {
-	xxx_messageInfo_Maybe.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Maybe proto.InternalMessageInfo
-
-type isMaybe_XValue interface {
-	isMaybe_XValue()
+func (m *OptMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_OptMessage.DiscardUnknown(m)
 }
 
-type Maybe_Value struct {
-	Value string `protobuf:"bytes,1,opt,name=value,proto3,oneof" json:"value,omitempty"`
-}
+var xxx_messageInfo_OptMessage proto.InternalMessageInfo
 
-func (*Maybe_Value) isMaybe_XValue() {}
-
-func (m *Maybe) GetXValue() isMaybe_XValue {
+func (m *OptMessage) GetMyParam() bool {
 	if m != nil {
-		return m.XValue
+		return *m.MyParam
 	}
-	return nil
-}
-
-func (m *Maybe) GetValue() string {
-	if x, ok := m.GetXValue().(*Maybe_Value); ok {
-		return x.Value
-	}
-	return ""
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*Maybe) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*Maybe_Value)(nil),
-	}
+	return false
 }
 
 func init() {
-	proto.RegisterType((*Maybe)(nil), "optional.Maybe")
+	proto.RegisterType((*OptMessage)(nil), "optional.OptMessage")
 }
 
 func init() { proto.RegisterFile("optional.proto", fileDescriptor_905cd112a63783c0) }
 
 var fileDescriptor_905cd112a63783c0 = []byte{
-	// 87 bytes of a gzipped FileDescriptorProto
+	// 100 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xcb, 0x2f, 0x28, 0xc9,
-	0xcc, 0xcf, 0x4b, 0xcc, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x80, 0xf1, 0x95, 0x74,
-	0xb8, 0x58, 0x7d, 0x13, 0x2b, 0x93, 0x52, 0x85, 0x24, 0xb9, 0x58, 0xcb, 0x12, 0x73, 0x4a, 0x53,
-	0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x3d, 0x18, 0x82, 0x20, 0xdc, 0x0e, 0x46, 0x46, 0x27, 0x0e,
-	0x2e, 0xb6, 0x78, 0x30, 0x27, 0x89, 0x0d, 0xac, 0xdd, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0xe4,
-	0x3d, 0x02, 0xff, 0x50, 0x00, 0x00, 0x00,
+	0xcc, 0xcf, 0x4b, 0xcc, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x80, 0xf1, 0x95, 0x2c,
+	0xb9, 0xb8, 0xfc, 0x0b, 0x4a, 0x7c, 0x53, 0x8b, 0x8b, 0x13, 0xd3, 0x53, 0x85, 0xe4, 0xb8, 0x38,
+	0x72, 0x2b, 0xe3, 0x0b, 0x12, 0x8b, 0x12, 0x73, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x3c, 0x18,
+	0x82, 0xd8, 0x73, 0x2b, 0x03, 0x40, 0x02, 0x1d, 0x8c, 0x8c, 0x4e, 0xdc, 0x5c, 0x9c, 0xf1, 0x30,
+	0x05, 0x49, 0x6c, 0x60, 0xb3, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x95, 0xde, 0xe6, 0x85,
+	0x5d, 0x00, 0x00, 0x00,
 }

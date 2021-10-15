@@ -371,6 +371,10 @@ func (f *FieldDescriptorProto) IsRequired() bool {
 	return f.Label != nil && *f.Label == FieldDescriptorProto_LABEL_REQUIRED
 }
 
+func (f *FieldDescriptorProto) IsOptional() bool {
+	return f.GetProto3Optional()
+}
+
 func (f *FieldDescriptorProto) IsPacked() bool {
 	return f.Options != nil && f.GetOptions().GetPacked()
 }

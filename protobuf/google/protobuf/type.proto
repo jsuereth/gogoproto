@@ -113,7 +113,7 @@ message Field {
     CARDINALITY_REQUIRED = 2;
     // For repeated fields.
     CARDINALITY_REPEATED = 3;
-  };
+  }
 
   // The field type.
   Kind kind = 1;

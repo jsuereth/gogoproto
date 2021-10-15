@@ -32,6 +32,6 @@ syntax = "proto3";
 package optional;
 
 
-message Maybe {
-    optional string value = 1;
+message OptMessage {
+    optional bool my_param = 1;
 }

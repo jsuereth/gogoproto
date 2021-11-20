@@ -34,7 +34,9 @@ BENCHLIST?=all
 # https://github.com/gogo/protobuf/issues/448
 SKIPISSUE:="/jsonpb|/test/casttype/|/test/oneof/combos/"
 
-.PHONY: nuke regenerate tests clean install gofmt vet contributors
+GOGO_PROTO_BUILD_DIR=build/protoinclude
+
+.PHONY: nuke regenerate tests clean install gofmt vet contributors stage_proto
 
 all: clean install regenerate install tests errcheck vet
 
@@ -62,6 +64,11 @@ nuke:
 
 gofmt:
 	gofmt -l -s -w .
+
+# TODO - remove link if it already exists.
+stage_proto:
+	mkdir -p $(GOGO_PROTO_BUILD_DIR)/github.com/gogo/protobuf/gogoproto/
+	ln -s $(PWD)/gogoproto/gogo.proto $(GOGO_PROTO_BUILD_DIR)/github.com/gogo/protobuf/gogoproto/gogo.proto
 
 regenerate:
 	make -C protoc-gen-gogo regenerate

@@ -31,6 +31,7 @@ syntax = "proto3";
 
 package optional;
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 message OptMessage {
     optional bool my_param = 1;
@@ -40,4 +41,13 @@ message OptMessage {
     optional fixed64 long_param = 5;
     optional double double_param = 6;
     optional string string_param = 7;
+    optional bytes bytes_param = 8;
+    optional bytes custom_param = 9 [(gogoproto.customtype) = "github.com/gogo/protobuf/test/custom.Uint128"];
+
+    // Non-nullable optional?
+    optional Embedded msg_param = 10;
+
+    message Embedded {
+        int32 value = 1;
+    }
 }

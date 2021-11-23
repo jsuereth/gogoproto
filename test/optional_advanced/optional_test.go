@@ -6,6 +6,7 @@ import (
 	testing "testing"
 
 	proto "github.com/gogo/protobuf/proto"
+	"github.com/gogo/protobuf/test/custom"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -29,6 +30,10 @@ func TestOptionalProtoSerializes(t *testing.T) {
 		LongParam:   &ulongp,
 		DoubleParam: &dp,
 		StringParam: &sp,
+		CustomParam: &custom.Uint128{1, 2},
+		MsgParam: &OptMessage_Embedded{
+			Value: 2,
+		},
 	}
 	dAtA, err := p.Marshal()
 	if err != nil {

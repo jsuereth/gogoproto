@@ -6,7 +6,9 @@ package optional
 import (
 	encoding_binary "encoding/binary"
 	fmt "fmt"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
+	github_com_gogo_protobuf_test_custom "github.com/gogo/protobuf/test/custom"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -24,13 +26,17 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type OptMessage struct {
-	MyParam     *bool    `protobuf:"varint,1,opt,name=my_param,json=myParam,proto3,oneof" json:"my_param,omitempty"`
-	VintParam   *int32   `protobuf:"varint,2,opt,name=vint_param,json=vintParam,proto3,oneof" json:"vint_param,omitempty"`
-	VlongParam  *int64   `protobuf:"varint,3,opt,name=vlong_param,json=vlongParam,proto3,oneof" json:"vlong_param,omitempty"`
-	IntParam    *uint32  `protobuf:"fixed32,4,opt,name=int_param,json=intParam,proto3,oneof" json:"int_param,omitempty"`
-	LongParam   *uint64  `protobuf:"fixed64,5,opt,name=long_param,json=longParam,proto3,oneof" json:"long_param,omitempty"`
-	DoubleParam *float64 `protobuf:"fixed64,6,opt,name=double_param,json=doubleParam,proto3,oneof" json:"double_param,omitempty"`
-	StringParam *string  `protobuf:"bytes,7,opt,name=string_param,json=stringParam,proto3,oneof" json:"string_param,omitempty"`
+	MyParam     *bool                                         `protobuf:"varint,1,opt,name=my_param,json=myParam,proto3,oneof" json:"my_param,omitempty"`
+	VintParam   *int32                                        `protobuf:"varint,2,opt,name=vint_param,json=vintParam,proto3,oneof" json:"vint_param,omitempty"`
+	VlongParam  *int64                                        `protobuf:"varint,3,opt,name=vlong_param,json=vlongParam,proto3,oneof" json:"vlong_param,omitempty"`
+	IntParam    *uint32                                       `protobuf:"fixed32,4,opt,name=int_param,json=intParam,proto3,oneof" json:"int_param,omitempty"`
+	LongParam   *uint64                                       `protobuf:"fixed64,5,opt,name=long_param,json=longParam,proto3,oneof" json:"long_param,omitempty"`
+	DoubleParam *float64                                      `protobuf:"fixed64,6,opt,name=double_param,json=doubleParam,proto3,oneof" json:"double_param,omitempty"`
+	StringParam *string                                       `protobuf:"bytes,7,opt,name=string_param,json=stringParam,proto3,oneof" json:"string_param,omitempty"`
+	BytesParam  []byte                                        `protobuf:"bytes,8,opt,name=bytes_param,json=bytesParam,proto3,oneof" json:"bytes_param,omitempty"`
+	CustomParam *github_com_gogo_protobuf_test_custom.Uint128 `protobuf:"bytes,9,opt,name=custom_param,json=customParam,proto3,oneof,customtype=github.com/gogo/protobuf/test/custom.Uint128" json:"custom_param,omitempty"`
+	// Non-nullable optional?
+	MsgParam *OptMessage_Embedded `protobuf:"bytes,10,opt,name=msg_param,json=msgParam,proto3,oneof" json:"msg_param,omitempty"`
 }
 
 func (m *OptMessage) Reset()         { *m = OptMessage{} }
@@ -115,32 +121,100 @@ func (m *OptMessage) GetStringParam() string {
 	return ""
 }
 
+func (m *OptMessage) GetBytesParam() []byte {
+	if m != nil {
+		return m.BytesParam
+	}
+	return nil
+}
+
+func (m *OptMessage) GetMsgParam() *OptMessage_Embedded {
+	if m != nil {
+		return m.MsgParam
+	}
+	return nil
+}
+
+type OptMessage_Embedded struct {
+	Value int32 `protobuf:"varint,1,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (m *OptMessage_Embedded) Reset()         { *m = OptMessage_Embedded{} }
+func (m *OptMessage_Embedded) String() string { return proto.CompactTextString(m) }
+func (*OptMessage_Embedded) ProtoMessage()    {}
+func (*OptMessage_Embedded) Descriptor() ([]byte, []int) {
+	return fileDescriptor_905cd112a63783c0, []int{0, 0}
+}
+func (m *OptMessage_Embedded) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *OptMessage_Embedded) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_OptMessage_Embedded.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *OptMessage_Embedded) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OptMessage_Embedded.Merge(m, src)
+}
+func (m *OptMessage_Embedded) XXX_Size() int {
+	return m.Size()
+}
+func (m *OptMessage_Embedded) XXX_DiscardUnknown() {
+	xxx_messageInfo_OptMessage_Embedded.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_OptMessage_Embedded proto.InternalMessageInfo
+
+func (m *OptMessage_Embedded) GetValue() int32 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*OptMessage)(nil), "optional.OptMessage")
+	proto.RegisterType((*OptMessage_Embedded)(nil), "optional.OptMessage.Embedded")
 }
 
 func init() { proto.RegisterFile("optional.proto", fileDescriptor_905cd112a63783c0) }
 
 var fileDescriptor_905cd112a63783c0 = []byte{
-	// 275 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0x3d, 0x6a, 0x84, 0x40,
-	0x14, 0x80, 0x7d, 0xeb, 0xfa, 0xf7, 0x74, 0x37, 0x60, 0xb5, 0xd5, 0x30, 0x48, 0x08, 0x53, 0xa5,
-	0xc9, 0x0d, 0xac, 0xa6, 0x09, 0x09, 0x73, 0x81, 0xc1, 0x25, 0xb2, 0x08, 0xea, 0x88, 0x9a, 0x85,
-	0xbd, 0x41, 0xca, 0x1c, 0x2b, 0xe5, 0x96, 0x29, 0x83, 0x1e, 0x22, 0x6d, 0xd0, 0xf5, 0x67, 0x52,
-	0xfa, 0xbd, 0x8f, 0x8f, 0xf7, 0x1c, 0xdc, 0xab, 0xaa, 0xcd, 0x54, 0x99, 0xe4, 0x8f, 0x55, 0xad,
-	0x5a, 0x15, 0xba, 0xf3, 0x77, 0xf4, 0xbb, 0x41, 0x7c, 0xa9, 0xda, 0xe7, 0xb4, 0x69, 0x92, 0x53,
-	0x1a, 0x12, 0x74, 0x8b, 0x8b, 0xac, 0x92, 0x3a, 0x29, 0x0e, 0x40, 0x81, 0xb9, 0xdc, 0x10, 0x4e,
-	0x71, 0x79, 0x1d, 0xc0, 0x07, 0x40, 0x18, 0x21, 0x9e, 0xb3, 0xb2, 0x9d, 0x8c, 0x0d, 0x05, 0x66,
-	0x71, 0x10, 0xde, 0xc0, 0x16, 0xe7, 0x1e, 0xfd, 0x73, 0xae, 0xca, 0xd3, 0x24, 0x99, 0x14, 0x98,
-	0xc9, 0x37, 0x02, 0x47, 0xb8, 0x58, 0x14, 0xbd, 0x35, 0xb4, 0xa5, 0xc0, 0x1c, 0x6e, 0x0a, 0x57,
-	0xef, 0x44, 0x88, 0x5a, 0xc6, 0xa2, 0xc0, 0x6c, 0xbe, 0x15, 0xde, 0xbf, 0xca, 0x03, 0x06, 0x6f,
-	0xea, 0xfd, 0x98, 0xa7, 0x93, 0x65, 0x53, 0x60, 0xc0, 0x2d, 0xe1, 0xdf, 0xa8, 0xee, 0x35, 0x6d,
-	0x9d, 0x2d, 0x35, 0x87, 0x02, 0xf3, 0xb8, 0x2d, 0xfc, 0x1b, 0x9d, 0xbd, 0xd8, 0x47, 0x4f, 0xce,
-	0x3f, 0x20, 0xde, 0xa1, 0x2f, 0xd7, 0x6b, 0xe3, 0x3d, 0x06, 0x52, 0x3b, 0x2c, 0x0e, 0x10, 0xe5,
-	0x3a, 0x1d, 0x64, 0x6d, 0x78, 0x87, 0x3b, 0xa9, 0x6f, 0x36, 0x02, 0x7d, 0x85, 0xf8, 0xf0, 0xd5,
-	0x11, 0xb8, 0x76, 0x04, 0x7e, 0x3a, 0x02, 0x9f, 0x3d, 0x31, 0xae, 0x3d, 0x31, 0xbe, 0x7b, 0x62,
-	0x1c, 0xed, 0xf1, 0x91, 0x9e, 0xfe, 0x02, 0x00, 0x00, 0xff, 0xff, 0xc0, 0xdc, 0x72, 0x5f, 0xb6,
-	0x01, 0x00, 0x00,
+	// 427 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0xc1, 0x8b, 0xd3, 0x40,
+	0x14, 0xc6, 0xfb, 0xb6, 0x9b, 0x36, 0x79, 0xc9, 0xae, 0x50, 0x3c, 0x2c, 0x0b, 0xc6, 0xa1, 0x88,
+	0xcc, 0x41, 0x53, 0x5d, 0x2f, 0xde, 0x84, 0x80, 0x30, 0x17, 0x51, 0x06, 0x04, 0x6f, 0x21, 0xd9,
+	0x8e, 0x31, 0xd0, 0xe9, 0x94, 0xce, 0xa4, 0xd0, 0xff, 0x40, 0x6f, 0xfe, 0x59, 0x1e, 0x7b, 0x14,
+	0x0f, 0x22, 0xed, 0x3f, 0x22, 0x9d, 0xa4, 0xd3, 0xf1, 0xe0, 0x6d, 0xde, 0xf7, 0x7e, 0xf3, 0x31,
+	0xf3, 0x7d, 0x78, 0xad, 0x56, 0xa6, 0x51, 0xcb, 0x72, 0x91, 0xad, 0xd6, 0xca, 0xa8, 0x49, 0x78,
+	0x9a, 0x6f, 0x9f, 0xd7, 0x8d, 0xf9, 0xd2, 0x56, 0xd9, 0xbd, 0x92, 0xb3, 0x5a, 0xd5, 0x6a, 0x66,
+	0x81, 0xaa, 0xfd, 0x6c, 0x27, 0x3b, 0xd8, 0x53, 0x77, 0x71, 0xfa, 0x2d, 0x40, 0x7c, 0xbf, 0x32,
+	0xef, 0x84, 0xd6, 0x65, 0x2d, 0x26, 0x29, 0x86, 0x72, 0x5b, 0xac, 0xca, 0x75, 0x29, 0x6f, 0x80,
+	0x00, 0x0d, 0xd9, 0x80, 0x8f, 0xe5, 0xf6, 0xc3, 0x51, 0xf8, 0x0a, 0x30, 0x99, 0x22, 0x6e, 0x9a,
+	0xa5, 0xe9, 0x89, 0x0b, 0x02, 0x34, 0x60, 0xc0, 0xa3, 0xa3, 0xe6, 0x98, 0x27, 0x18, 0x6f, 0x16,
+	0x6a, 0x59, 0xf7, 0xd0, 0x90, 0x00, 0x1d, 0xb2, 0x0b, 0x8e, 0x56, 0x74, 0x14, 0xc1, 0xe8, 0x6c,
+	0x74, 0x49, 0x80, 0x8e, 0xd9, 0x90, 0x87, 0xbe, 0xcf, 0x14, 0xd1, 0xb3, 0x09, 0x08, 0xd0, 0x11,
+	0xbb, 0xe4, 0xd1, 0x3f, 0x2e, 0x4f, 0x31, 0x99, 0xab, 0xb6, 0x5a, 0x88, 0x9e, 0x1a, 0x11, 0xa0,
+	0xc0, 0x02, 0x1e, 0x77, 0xaa, 0xcf, 0x69, 0xb3, 0x6e, 0x9c, 0xdb, 0x98, 0x00, 0x8d, 0xd8, 0x88,
+	0xc7, 0x9d, 0xea, 0xbf, 0xbd, 0xda, 0x1a, 0xa1, 0x7b, 0x2c, 0x24, 0x40, 0x13, 0x36, 0xe6, 0x68,
+	0x45, 0x47, 0x7d, 0xc2, 0xe4, 0xbe, 0xd5, 0x46, 0xc9, 0x1e, 0x8b, 0x8e, 0x58, 0xfe, 0xe2, 0xd7,
+	0xef, 0xc7, 0xcf, 0xfe, 0x9b, 0xbe, 0x11, 0xda, 0xcc, 0xba, 0x5b, 0xd9, 0xc7, 0x66, 0x69, 0x5e,
+	0xde, 0xbd, 0x66, 0x21, 0x8f, 0x3b, 0xc5, 0x39, 0xbf, 0xc1, 0x48, 0xea, 0xd3, 0x23, 0x91, 0x00,
+	0x8d, 0xef, 0x1e, 0x65, 0xae, 0xeb, 0x73, 0x51, 0xd9, 0x5b, 0x59, 0x89, 0xf9, 0x5c, 0xcc, 0x59,
+	0xc4, 0x43, 0xa9, 0xdd, 0x07, 0x6e, 0x09, 0x86, 0xa7, 0xd5, 0xe4, 0x21, 0x06, 0x9b, 0x72, 0xd1,
+	0x0a, 0xdb, 0x64, 0xc0, 0xbb, 0x21, 0x8f, 0x31, 0x2a, 0x4e, 0x1d, 0xe7, 0x57, 0x18, 0x17, 0xe7,
+	0x42, 0xf3, 0x6b, 0x4c, 0x0a, 0xaf, 0xbb, 0x3c, 0x41, 0x2c, 0xce, 0xdb, 0x23, 0xec, 0x2d, 0x1f,
+	0xe0, 0x55, 0xe1, 0x87, 0x6f, 0x05, 0x3f, 0x65, 0x6b, 0xe7, 0xc5, 0x69, 0x01, 0x3f, 0x38, 0xeb,
+	0xef, 0xfe, 0x9b, 0xdf, 0xfc, 0xd8, 0xa7, 0xb0, 0xdb, 0xa7, 0xf0, 0x67, 0x9f, 0xc2, 0xf7, 0x43,
+	0x3a, 0xd8, 0x1d, 0xd2, 0xc1, 0xcf, 0x43, 0x3a, 0xa8, 0x46, 0x36, 0xc6, 0x57, 0x7f, 0x03, 0x00,
+	0x00, 0xff, 0xff, 0x58, 0x26, 0x97, 0xec, 0xf7, 0x02, 0x00, 0x00,
 }
 
 func (m *OptMessage) Marshal() (dAtA []byte, err error) {
@@ -163,6 +237,37 @@ func (m *OptMessage) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.MsgParam != nil {
+		{
+			size, err := m.MsgParam.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintOptional(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x52
+	}
+	if m.CustomParam != nil {
+		{
+			size := m.CustomParam.Size()
+			i -= size
+			if _, err := m.CustomParam.MarshalTo(dAtA[i:]); err != nil {
+				return 0, err
+			}
+			i = encodeVarintOptional(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x4a
+	}
+	if m.BytesParam != nil {
+		i -= len(m.BytesParam)
+		copy(dAtA[i:], m.BytesParam)
+		i = encodeVarintOptional(dAtA, i, uint64(len(m.BytesParam)))
+		i--
+		dAtA[i] = 0x42
+	}
 	if m.StringParam != nil {
 		i -= len(*m.StringParam)
 		copy(dAtA[i:], *m.StringParam)
@@ -211,6 +316,34 @@ func (m *OptMessage) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *OptMessage_Embedded) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OptMessage_Embedded) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *OptMessage_Embedded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Value != 0 {
+		i = encodeVarintOptional(dAtA, i, uint64(m.Value))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintOptional(dAtA []byte, offset int, v uint64) int {
 	offset -= sovOptional(v)
 	base := offset
@@ -249,6 +382,32 @@ func (m *OptMessage) Size() (n int) {
 	if m.StringParam != nil {
 		l = len(*m.StringParam)
 		n += 1 + l + sovOptional(uint64(l))
+	}
+	if m.BytesParam != nil {
+		l = len(m.BytesParam)
+		if l > 0 {
+			n += 1 + l + sovOptional(uint64(l))
+		}
+	}
+	if m.CustomParam != nil {
+		l = m.CustomParam.Size()
+		n += 1 + l + sovOptional(uint64(l))
+	}
+	if m.MsgParam != nil {
+		l = m.MsgParam.Size()
+		n += 1 + l + sovOptional(uint64(l))
+	}
+	return n
+}
+
+func (m *OptMessage_Embedded) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Value != 0 {
+		n += 1 + sovOptional(uint64(m.Value))
 	}
 	return n
 }
@@ -416,6 +575,180 @@ func (m *OptMessage) Unmarshal(dAtA []byte) error {
 			s := string(dAtA[iNdEx:postIndex])
 			m.StringParam = &s
 			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BytesParam", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOptional
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthOptional
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOptional
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BytesParam = append(m.BytesParam[:0], dAtA[iNdEx:postIndex]...)
+			if m.BytesParam == nil {
+				m.BytesParam = []byte{}
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CustomParam", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOptional
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthOptional
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOptional
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var v github_com_gogo_protobuf_test_custom.Uint128
+			m.CustomParam = &v
+			if err := m.CustomParam.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MsgParam", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOptional
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthOptional
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthOptional
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.MsgParam == nil {
+				m.MsgParam = &OptMessage_Embedded{}
+			}
+			if err := m.MsgParam.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOptional(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthOptional
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *OptMessage_Embedded) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOptional
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Embedded: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Embedded: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Value", wireType)
+			}
+			m.Value = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOptional
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Value |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipOptional(dAtA[iNdEx:])

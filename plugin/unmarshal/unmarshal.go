@@ -1142,7 +1142,7 @@ func (p *unmarshal) field(file *generator.FileDescriptor, msg *generator.Descrip
 		p.Out()
 		p.P(`}`)
 		if !gogoproto.IsCustomType(field) {
-			if oneof {
+			if oneof && !proto3Optional {
 				p.P(`v := make([]byte, postIndex-iNdEx)`)
 				p.P(`copy(v, dAtA[iNdEx:postIndex])`)
 				p.P(`m.`, fieldname, ` = &`, p.OneOfTypeName(msg, field), `{v}`)

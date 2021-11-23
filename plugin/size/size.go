@@ -258,7 +258,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+sov`, p.localName, `(uint64(len(m.`, fieldname, `)*8))`, `+len(m.`, fieldname, `)*8`)
 		} else if repeated {
 			p.P(`n+=`, strconv.Itoa(key+8), `*len(m.`, fieldname, `)`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`if m.`, fieldname, ` != 0 {`)
 			p.In()
 			p.P(`n+=`, strconv.Itoa(key+8))
@@ -276,7 +276,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+sov`, p.localName, `(uint64(len(m.`, fieldname, `)*4))`, `+len(m.`, fieldname, `)*4`)
 		} else if repeated {
 			p.P(`n+=`, strconv.Itoa(key+4), `*len(m.`, fieldname, `)`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`if m.`, fieldname, ` != 0 {`)
 			p.In()
 			p.P(`n+=`, strconv.Itoa(key+4))
@@ -306,7 +306,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+sov`, p.localName, `(uint64(e))`)
 			p.Out()
 			p.P(`}`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`if m.`, fieldname, ` != 0 {`)
 			p.In()
 			p.P(`n+=`, strconv.Itoa(key), `+sov`, p.localName, `(uint64(m.`, fieldname, `))`)
@@ -322,7 +322,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+sov`, p.localName, `(uint64(len(m.`, fieldname, `)))`, `+len(m.`, fieldname, `)*1`)
 		} else if repeated {
 			p.P(`n+=`, strconv.Itoa(key+1), `*len(m.`, fieldname, `)`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`if m.`, fieldname, ` {`)
 			p.In()
 			p.P(`n+=`, strconv.Itoa(key+1))
@@ -341,7 +341,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+l+sov`, p.localName, `(uint64(l))`)
 			p.Out()
 			p.P(`}`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`l=len(m.`, fieldname, `)`)
 			p.P(`if l > 0 {`)
 			p.In()
@@ -557,7 +557,7 @@ func (p *size) generateField(proto3 bool, file *generator.FileDescriptor, messag
 			p.P(`n+=`, strconv.Itoa(key), `+soz`, p.localName, `(uint64(e))`)
 			p.Out()
 			p.P(`}`)
-		} else if proto3 {
+		} else if proto3 && !field.GetProto3Optional() {
 			p.P(`if m.`, fieldname, ` != 0 {`)
 			p.In()
 			p.P(`n+=`, strconv.Itoa(key), `+soz`, p.localName, `(uint64(m.`, fieldname, `))`)
@@ -617,7 +617,7 @@ func (p *size) Generate(file *generator.FileDescriptor) {
 		oneofs := make(map[string]struct{})
 		for _, field := range message.Field {
 			oneof := field.OneofIndex != nil
-			if !oneof {
+			if !oneof || field.GetProto3Optional() {
 				proto3 := gogoproto.IsProto3(file.FileDescriptorProto)
 				p.generateField(proto3, file, message, field, sizeName)
 			} else {
@@ -661,7 +661,7 @@ func (p *size) Generate(file *generator.FileDescriptor) {
 		m := proto.Clone(message.DescriptorProto).(*descriptor.DescriptorProto)
 		for _, f := range m.Field {
 			oneof := f.OneofIndex != nil
-			if !oneof {
+			if !oneof || f.GetProto3Optional() {
 				continue
 			}
 			ccTypeName := p.OneOfTypeName(message, f)

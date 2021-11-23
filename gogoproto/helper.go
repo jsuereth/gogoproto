@@ -28,8 +28,10 @@
 
 package gogoproto
 
-import google_protobuf "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
-import proto "github.com/gogo/protobuf/proto"
+import (
+	proto "github.com/gogo/protobuf/proto"
+	google_protobuf "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
+)
 
 func IsEmbed(field *google_protobuf.FieldDescriptorProto) bool {
 	return proto.GetBoolExtension(field.Options, E_Embed, false)
@@ -99,6 +101,9 @@ func IsWktPtr(field *google_protobuf.FieldDescriptorProto) bool {
 func NeedsNilCheck(proto3 bool, field *google_protobuf.FieldDescriptorProto) bool {
 	nullable := IsNullable(field)
 	if field.IsMessage() || IsCustomType(field) {
+		return nullable
+	}
+	if field.GetProto3Optional() {
 		return nullable
 	}
 	if proto3 {

@@ -2863,7 +2863,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			fieldName = ""
 		}
 
-		oneof := field.OneofIndex != nil && message.allowOneof() && !field.IsOptional()
+		oneof := field.OneofIndex != nil && message.allowOneof() && !field.IsOptional() && !field.GetProto3Optional()
 		if oneof && oFields[*field.OneofIndex] == nil {
 			odp := message.OneofDecl[int(*field.OneofIndex)]
 			base := CamelCase(odp.GetName())

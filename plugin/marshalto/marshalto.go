@@ -980,8 +980,9 @@ func (p *marshalto) Generate(file *generator.FileDescriptor) {
 		for i := len(message.Field) - 1; i >= 0; i-- {
 			field := message.Field[i]
 			oneof := field.OneofIndex != nil
-			if !oneof {
-				proto3 := gogoproto.IsProto3(file.FileDescriptorProto)
+			if !oneof || field.GetProto3Optional() {
+				// Pretend proto3 optionals are proto2 for codegen.
+				proto3 := gogoproto.IsProto3(file.FileDescriptorProto) && !field.GetProto3Optional()
 				p.generateField(proto3, numGen, file, message, field)
 			} else {
 				fieldname := p.GetFieldName(message, field)
@@ -1004,7 +1005,7 @@ func (p *marshalto) Generate(file *generator.FileDescriptor) {
 		m := proto.Clone(message.DescriptorProto).(*descriptor.DescriptorProto)
 		for _, field := range m.Field {
 			oneof := field.OneofIndex != nil
-			if !oneof {
+			if !oneof || field.GetProto3Optional() {
 				continue
 			}
 			ccTypeName := p.OneOfTypeName(message, field)
